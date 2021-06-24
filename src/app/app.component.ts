@@ -7,7 +7,7 @@ import {Component, OnInit} from '@angular/core';
 })
 export class AppComponent implements OnInit {
   title = 'WebWorkerPart1';
-  output: any;
+  output: any[] = [];
   worker: Worker;
 
   ngOnInit(): void {
@@ -15,12 +15,15 @@ export class AppComponent implements OnInit {
     if (this.worker === undefined) {
       this.worker = new Worker('./webworker.worker', {type: 'module'});
       this.worker.onmessage = ({data}) => {
-        this.output = data;
+        console.log(data);
+        this.output.push(data);
       };
     }
   }
 
   getData(): void {
-    this.worker.postMessage(5);
+    for (const page of [1, 2, 3, 4]) {
+      this.worker.postMessage(`https://adrianwii.pl/api/news?page=${page}&limit=5`);
+    }
   }
 }
